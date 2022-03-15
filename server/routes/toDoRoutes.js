@@ -7,12 +7,12 @@ import {
   getToDoById,
   getAllToDos,
 } from '../controllers/toDoController.js'
-import { protect, limiter } from '../middleware/authMiddleware.js'
+import { protect } from '../middleware/authMiddleware.js'
 
 router
   .route('/')
   .post(protect, createToDo)
-  .get(protect, limiter, getAllToDos)
+  .get(protect, getAllToDos)
 router
   .route('/:id')
   .delete(protect, deleteToDo)

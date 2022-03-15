@@ -2,9 +2,11 @@ import path from 'path'
 import express from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
+import passport from 'passport'
 import cors from 'cors'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import connectDB from './config/db.js'
+import passportConfig from './config/passport.js'
 
 import toDoRoutes from './routes/toDoRoutes.js'
 import userRoutes from './routes/userRoutes.js'
@@ -22,8 +24,18 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json())
 app.use(cors())
 
+// Passport middleware
+app.use(passport.initialize());
+
+passportConfig(passport)
+
 app.use('/api/todo', toDoRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json({
+    message: 'Over the top'
+  })
+})
 
 const __dirname = path.resolve()
 
